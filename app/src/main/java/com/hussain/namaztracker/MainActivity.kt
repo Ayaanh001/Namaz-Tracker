@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,9 +62,14 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val sharedViewModel: SalahViewModel = viewModel()
                 
-                Scaffold(
+                Surface(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = {
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        containerColor = MaterialTheme.colorScheme.background,
+                        bottomBar = {
                         NavigationBar {
                             val navBackStackEntry by navController.currentBackStackEntryAsState()
                             val currentDestination = navBackStackEntry?.destination
@@ -116,5 +122,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
 }
 

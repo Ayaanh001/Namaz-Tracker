@@ -90,6 +90,7 @@ fun SettingsScreen() {
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = { 
             TopAppBar(
                 title = { 
@@ -99,7 +100,11 @@ fun SettingsScreen() {
                             fontWeight = FontWeight.SemiBold
                         )
                     ) 
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent,
+                )
             )
         }
     ) { innerPadding ->
@@ -205,7 +210,7 @@ fun SettingsScreen() {
             item {
                 Column {
                     Text(
-                        text = "Backup & Restore",
+                        text = "Data Management",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(bottom = 4.dp)

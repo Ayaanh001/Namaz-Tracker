@@ -83,6 +83,7 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
     val mainScrollState = rememberScrollState()
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -95,7 +96,8 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent
                 )
             )
         }
@@ -324,7 +326,7 @@ fun StatsDetailPopover(
         PrayerStatus.GROUP -> "In Jamaah"
         PrayerStatus.ALONE -> "On Time"
         PrayerStatus.LATE -> "Late"
-        PrayerStatus.MISSED -> "Missed"
+        PrayerStatus.MISSED -> "Not Prayed"
         PrayerStatus.UPCOMING -> "Not Recorded"
     }
 
@@ -600,7 +602,7 @@ fun PremiumBreakdownCard(breakdown: Map<PrayerStatus, Int>, range: StatsRange) {
         PrayerStatus.GROUP to "In Jamaah",
         PrayerStatus.ALONE to "On Time",
         PrayerStatus.LATE to "Late",
-        PrayerStatus.MISSED to "Missed"
+        PrayerStatus.MISSED to "Not Prayed"
     )
 
     Card(
