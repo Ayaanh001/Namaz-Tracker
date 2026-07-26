@@ -1,0 +1,16 @@
+- [x] Update `ui/theme/Color.kt` with new colors
+- [x] Implement `PrayerStatus` and `PrayerEntry` data models in `SalahScreen.kt`
+- [x] Implement `ParallelogramShape` in `SalahScreen.kt`
+- [x] Build `SalahTopAppBar` (Removed in favor of custom title)
+- [x] Build `HorizontalDateStrip`
+- [x] Build `PrayerCard` and `PrayerList`
+- [x] Integrate everything into `SalahScreen`
+- [x] Decrease size of `DatePill`
+- [x] Reduce top spacing for "Salah Tracker" title
+- [x] Material 3 color integration for cards and pills
+- [x] Refine `HorizontalDateStrip` range (30 days past, 3 days future)
+- [x] Fix `DatePill` size and jumping layout issue
+- [x] Redesign `DatePill` with split background and nested date container
+- [x] Add selection indicator bar to `DatePill`
+- [x] Refine `DatePill` height and edge-to-edge inner background
+- [x] Further decrease `DatePill` height and move indicator to bottom

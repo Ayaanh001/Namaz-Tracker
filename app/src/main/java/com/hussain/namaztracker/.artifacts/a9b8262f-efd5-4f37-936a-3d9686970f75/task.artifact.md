@@ -1,0 +1,5 @@
+- [x] Implement `SpeechBubbleShape` for the popover
+- [x] Update `PrayerStatusBox` to track layout coordinates
+- [x] Create `StatsDetailPopover` using `Popup` and `PopupPositionProvider`
+- [x] Refactor `StatsScreen` to use the popover instead of the dialog
+- [x] Verify positioning and responsiveness

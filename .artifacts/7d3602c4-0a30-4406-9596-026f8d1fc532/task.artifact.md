@@ -1,0 +1,8 @@
+- `[x]` Update `SettingsManager.kt` with location caching keys and methods
+- `[x]` Refactor `QiblaViewModel.kt`
+    - `[x]` Initialize with cached location from `SettingsManager`
+    - `[x]` Improve location retrieval with fallbacks (`getCurrentLocation` -> `lastLocation` -> cached)
+    - `[x]` Save successfully retrieved locations to `SettingsManager`
+    - `[x]` Implement magnetic declination correction using `GeomagneticField`
+- `[x]` Verify Qibla screen behavior with location OFF
+- `[x]` Verify Qibla accuracy improvements

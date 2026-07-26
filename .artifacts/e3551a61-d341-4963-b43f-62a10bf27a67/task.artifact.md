@@ -1,0 +1,6 @@
+- [x] Add Haptics and Update Date UI
+    - [x] Add haptics to `DatePill` and `PrayerCard` in `SalahScreen.kt`
+    - [x] Update `DatePill` to use Material 3 colors in `SalahScreen.kt`
+    - [x] Fix `DatePill` today indicator in `SalahScreen.kt`
+    - [x] Add haptics to `CompletionOptionItem` in `PrayerCompletionBottomSheet.kt`
+- [x] Verify changes on device/emulator

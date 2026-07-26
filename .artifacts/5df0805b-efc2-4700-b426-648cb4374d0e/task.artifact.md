@@ -1,0 +1,16 @@
+- [x] Setup dependencies and permissions
+    - [x] Add `play-services-location` to `libs.versions.toml`
+    - [x] Add dependency to `app/build.gradle.kts`
+    - [x] Update `AndroidManifest.xml` with location permissions
+- [x] Update Navigation
+    - [x] Add `Screen.Qibla` to `Screen.kt` and reorder `bottomNavItems`
+    - [x] Register `QiblaScreen` in `MainActivity.kt`
+- [x] Implement Qibla Logic
+    - [x] Create `QiblaViewModel.kt` for sensor and location handling
+- [x] Implement Qibla UI
+    - [x] Create `QiblaScreen.kt` with compass and distance information
+- [x] Verification
+    - [x] Verify build and navigation
+    - [x] Manual test of compass movement and location display
+    - [ ] Verify build and navigation
+    - [ ] Manual test of compass movement and location display
