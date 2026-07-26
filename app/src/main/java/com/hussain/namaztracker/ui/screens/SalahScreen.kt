@@ -1,9 +1,13 @@
 package com.hussain.namaztracker.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -12,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -30,7 +35,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -46,7 +53,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.*
-
 
 val ParallelogramShape = GenericShape { size, _ ->
     moveTo(size.width * 0.25f, 0f)
@@ -89,14 +95,14 @@ fun SalahScreen(viewModel: SalahViewModel = viewModel()) {
     ) {
         Text(
             text = "Salah Tracker",
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
-            style = MaterialTheme.typography.headlineSmall.copy(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+            style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Box(modifier = Modifier.fillMaxWidth()) {
             HorizontalDateStrip(
@@ -111,7 +117,7 @@ fun SalahScreen(viewModel: SalahViewModel = viewModel()) {
                 exit = fadeOut(),
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 12.dp)
+                    .padding(end = 16.dp)
             ) {
                 Surface(
                     onClick = {
@@ -140,11 +146,11 @@ fun SalahScreen(viewModel: SalahViewModel = viewModel()) {
 
         Text(
             text = "PRAYERS",
-            modifier = Modifier.padding(horizontal = 24.dp),
+            modifier = Modifier.padding(horizontal = 20.dp),
             style = MaterialTheme.typography.labelSmall.copy(
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                letterSpacing = 1.5.sp,
-                fontWeight = FontWeight.Bold
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
+                letterSpacing = 2.sp,
+                fontWeight = FontWeight.ExtraBold
             )
         )
 
@@ -153,7 +159,7 @@ fun SalahScreen(viewModel: SalahViewModel = viewModel()) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             itemsIndexed(prayers) { _, prayer ->
                 PrayerCard(
@@ -202,12 +208,10 @@ fun HorizontalDateStrip(
         (-500..2).map { LocalDate.now().plusDays(it.toLong()) }
     }
     
-    // Initial scroll handled by state creation in parent
-    
     LazyRow(
         state = listState,
         contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp), //it was 10dp
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         itemsIndexed(dates) { _, date ->
@@ -270,8 +274,8 @@ fun DatePill(
 
     Column(
         modifier = Modifier
-            .width(44.dp)   //48dp
-            .height(64.dp) // Further reduced height
+            .width(44.dp)
+            .height(64.dp)
             .clip(RoundedCornerShape(18.dp))
             .background(topSectionColor)
             .clickable {
@@ -339,65 +343,79 @@ fun PrayerCard(
     onClick: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
-    
+    var isPressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.97f else 1f,
+        animationSpec = tween(100),
+        label = "prayerCardScale"
+    )
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .clip(RoundedCornerShape(24.dp))
             .clickable {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                isPressed = true
                 onClick()
             },
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(start = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(20.dp))
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = prayer.icon,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.size(28.dp)
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(26.dp)
                 )
             }
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = prayer.name,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 20.sp
-                ),
-                modifier = Modifier.weight(1f)
-            )
-
-            // Material status color: surfaceVariant for UPCOMING
-            val statusColor = if (prayer.status == PrayerStatus.UPCOMING) {
-                MaterialTheme.colorScheme.surfaceVariant
-            } else {
-                prayer.status.color
+            
+            Spacer(modifier = Modifier.width(16.dp))
+            
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = prayer.name,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 18.sp
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
+
+            val statusColor = if (prayer.status == PrayerStatus.UPCOMING) 
+                MaterialTheme.colorScheme.surfaceVariant 
+                else prayer.status.color
 
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(100.dp)
                     .clip(ParallelogramShape)
-                    .background(statusColor),
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(statusColor, statusColor.copy(alpha = 0.8f))
+                        )
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 prayer.status.icon?.let { icon ->
@@ -409,6 +427,13 @@ fun PrayerCard(
                     )
                 }
             }
+        }
+    }
+    
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            kotlinx.coroutines.delay(100)
+            isPressed = false
         }
     }
 }
