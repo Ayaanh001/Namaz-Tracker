@@ -4,28 +4,17 @@ gen/
 out/
 build/
 .gradle/
-/local.properties
+local.properties
 .externalNativeBuild
 .cxx
 /captures
+*.hprof
 
 # Android Studio / IntelliJ
 *.iml
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/gradle.xml
-.idea/assetWizardSettings.xml
-.idea/dictionaries
-.idea/libraries
-.idea/caches
-.idea/navEditor.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/modules/
-.idea/shelf/
-.idea/inspectionProfiles/
-.idea/iconloader.xml
-.idea/deploymentTargetSelector.xml
+.idea/
+!.idea/runConfigurations.xml
+!.idea/inspectionProfiles/
 
 # Keystore files
 *.jks
@@ -48,3 +37,6 @@ Thumbs.db
 
 # Kotlin
 .kotlin/
+
+# AI Agent Artifacts
+.artifacts/
