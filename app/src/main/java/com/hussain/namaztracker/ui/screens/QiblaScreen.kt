@@ -112,7 +112,7 @@ fun QiblaScreen(viewModel: QiblaViewModel = viewModel()) {
 
             // Rotating Compass
             val bearingRotation by animateFloatAsState(targetValue = -uiState.bearing, label = "bearing")
-            
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -133,7 +133,6 @@ fun QiblaScreen(viewModel: QiblaViewModel = viewModel()) {
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                 )
             )
-            
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
@@ -143,9 +142,7 @@ fun QiblaScreen(viewModel: QiblaViewModel = viewModel()) {
                     color = MaterialTheme.colorScheme.primary
                 )
             )
-            
             Spacer(modifier = Modifier.height(8.dp))
-            
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = String.format(Locale.getDefault(), "%.0f km from Mecca", uiState.distance),
@@ -163,7 +160,7 @@ fun QiblaScreen(viewModel: QiblaViewModel = viewModel()) {
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(100.dp))
     }
 }
 

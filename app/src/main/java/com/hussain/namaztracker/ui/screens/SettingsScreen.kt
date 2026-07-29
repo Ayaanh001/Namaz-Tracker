@@ -114,7 +114,7 @@ fun SettingsScreen() {
                 .padding(top = innerPadding.calculateTopPadding())
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(
-                bottom = innerPadding.calculateBottomPadding() + 24.dp
+                bottom = innerPadding.calculateBottomPadding() + 120.dp
             ),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {

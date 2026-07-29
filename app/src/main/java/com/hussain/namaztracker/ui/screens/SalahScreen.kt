@@ -170,6 +170,9 @@ fun SalahScreen(viewModel: SalahViewModel = viewModel()) {
                     }
                 )
             }
+            item {
+                Spacer(modifier = Modifier.height(100.dp))
+            }
         }
     }
 
