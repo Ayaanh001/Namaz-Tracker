@@ -791,7 +791,8 @@ fun ExpressiveSegmentedProgressBar(
     breakdown: Map<PrayerStatus, Int>,
     statuses: List<Pair<PrayerStatus, String>>
 ) {
-    val total = breakdown.values.sum().toFloat().coerceAtLeast(1f)
+    val totalCount = breakdown.values.sum()
+    val total = totalCount.toFloat().coerceAtLeast(1f)
     
     Row(
         modifier = Modifier
@@ -799,24 +800,35 @@ fun ExpressiveSegmentedProgressBar(
             .height(16.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        statuses.forEach { (status, _) ->
-            val count = breakdown[status] ?: 0
-            val targetWeight = count / total
-            
-            val animatedWeight by animateFloatAsState(
-                targetValue = targetWeight,
-                animationSpec = tween(durationMillis = 800),
-                label = "${status.name}Weight"
+        if (totalCount == 0) {
+            // Placeholder track when no data is recorded
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
             )
-
-            if (animatedWeight > 0.001f) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(animatedWeight)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(status.color)
+        } else {
+            statuses.forEach { (status, _) ->
+                val count = breakdown[status] ?: 0
+                val targetWeight = count / total
+                
+                val animatedWeight by animateFloatAsState(
+                    targetValue = targetWeight,
+                    animationSpec = tween(durationMillis = 800),
+                    label = "${status.name}Weight"
                 )
+
+                if (animatedWeight > 0.001f) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(animatedWeight)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(status.color)
+                    )
+                }
             }
         }
     }
