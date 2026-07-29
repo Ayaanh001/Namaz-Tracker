@@ -68,7 +68,7 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
     }
 
     val today = LocalDate.now()
-    val startDate = today.minusDays(60) // Show last 3 months
+    val startDate = today.minusDays(200) // Show last 6.5 months
     val endDate = today // Only up to today
     val dateList = remember {
         val list = mutableListOf<LocalDate>()
@@ -153,20 +153,6 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
                                 )*/
                                 .padding(horizontal = 2.dp)
                         ) {
-                            // Month Header (only show when month changes or at start)
-                            val showMonth = date.dayOfMonth == 1 || date == dateList.first()
-                            Text(
-                                text = if (showMonth) {
-                                    date.format(DateTimeFormatter.ofPattern("MMM"))
-                                } else "",
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
-                                    fontSize = 10.sp
-                                ),
-                                modifier = Modifier.height(14.dp)
-                            )
-
                             // Date Header
                             Box(
                                 modifier = Modifier
@@ -179,11 +165,16 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
                                     ),
                                 contentAlignment = Alignment.Center
                             ) {
+                                val label = if (date.dayOfMonth == 1 || date == dateList.first()) {
+                                    date.format(DateTimeFormatter.ofPattern("MMM"))
+                                } else {
+                                    date.dayOfMonth.toString()
+                                }
                                 Text(
-                                    text = date.dayOfMonth.toString(),
+                                    text = label,
                                     style = MaterialTheme.typography.labelSmall.copy(
-                                        fontWeight = if (isToday) FontWeight.ExtraBold else FontWeight.Medium,
-                                        color = if (isToday) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                                        fontWeight = if (isToday || date.dayOfMonth == 1 || date == dateList.first()) FontWeight.ExtraBold else FontWeight.Medium,
+                                        color = if (isToday || date.dayOfMonth == 1 || date == dateList.first()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 )
                             }
@@ -207,7 +198,7 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
 
                 // Fixed Prayer Labels Column (Now on the right)
                 Column(
-                    modifier = Modifier.padding(top = 50.dp), // Month(14) + Date(24) + 2*Spacing(6)
+                    modifier = Modifier.padding(top = 30.dp), // Date(24) + Spacing(6)
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     val prayerIcons = listOf(
@@ -259,6 +250,8 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
         )
         
         Spacer(modifier = Modifier.height(32.dp))
+        
+        Spacer(modifier = Modifier.height(100.dp))
         }
     }
 
