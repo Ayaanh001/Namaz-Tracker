@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -105,10 +106,13 @@ fun PrayerCompletionBottomSheet(
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         applyToAll = it 
                     },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.primary,
-                        checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
-                    )
+                    thumbContent = {
+                        Icon(
+                            imageVector = if (applyToAll) Icons.Filled.Check else Icons.Filled.Clear,
+                            contentDescription = null,
+                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                        )
+                    }
                 )
             }
 
