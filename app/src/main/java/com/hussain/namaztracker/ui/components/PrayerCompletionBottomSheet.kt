@@ -1,6 +1,8 @@
 package com.hussain.namaztracker.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -184,16 +187,35 @@ fun CompletionOptionItem(
     ) {
         Row(
             modifier = Modifier
-                .padding(horizontal = 20.dp, vertical = 16.dp),
+                .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             status.icon?.let { icon ->
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = status.color
-                )
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            if (isSelected) status.color 
+                            else status.color.copy(alpha = 0.1f)
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = if (isSelected) {
+                                if (status == PrayerStatus.MISSED) Color.Black.copy(alpha = 0.2f)
+                                else Color.White.copy(alpha = 0.2f)
+                            } else Color.Transparent,
+                            shape = RoundedCornerShape(12.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(22.dp),
+                        tint = if (isSelected) Color.White else status.color
+                    )
+                }
             }
             Spacer(modifier = Modifier.width(16.dp))
             Text(
