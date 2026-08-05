@@ -711,17 +711,12 @@ fun PrayerStatusBox(
     isFuture: Boolean,
     onClick: (Offset) -> Unit
 ) {
-    val targetColor = when {
+    val statusColor = when {
         isFuture -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
         status == PrayerStatus.UPCOMING -> MaterialTheme.colorScheme.surfaceVariant
         else -> status.color
     }
     
-    val animatedColor by animateColorAsState(
-        targetValue = targetColor,
-        animationSpec = tween(durationMillis = 500)
-    )
-
     var isPressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.9f else 1f,
@@ -746,8 +741,8 @@ fun PrayerStatusBox(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        animatedColor,
-                        animatedColor.copy(alpha = 0.8f)
+                        statusColor,
+                        statusColor.copy(alpha = 0.8f)
                     )
                 )
             )
