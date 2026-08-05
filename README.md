@@ -41,7 +41,3 @@ A simple and elegant Android application to track your daily prayers (Salah), vi
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
-
-- Icons by Google Material Icons.
-- Inspired by the need for a simple, ad-free prayer tracker.
