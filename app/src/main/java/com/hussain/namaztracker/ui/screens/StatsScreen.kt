@@ -68,12 +68,13 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
     }
 
     val today = LocalDate.now()
-    val startDate = today.minusDays(200) // Show last 6.5 months
-    val endDate = today // Only up to today
-    val dateList = remember {
+    val startDate = remember(historyMap) {
+        historyMap.keys.minOrNull() ?: today
+    }
+    val dateList = remember(startDate) {
         val list = mutableListOf<LocalDate>()
         var curr = startDate
-        while (!curr.isAfter(endDate)) {
+        while (!curr.isAfter(today)) {
             list.add(curr)
             curr = curr.plusDays(1)
         }
@@ -132,12 +133,18 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
                     .fillMaxWidth()
             ) {
                 // Scrollable Grid
-                val scrollState = rememberLazyListState(initialFirstVisibleItemIndex = dateList.size)
+                val scrollState = rememberLazyListState()
+
+                LaunchedEffect(dateList.size) {
+                    if (dateList.isNotEmpty()) {
+                        scrollState.scrollToItem(dateList.size - 1)
+                    }
+                }
                 
                 LazyRow(
                     state = scrollState,
                     modifier = Modifier.weight(1f),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                 ) {
                     items(dateList) { date ->
                         val isToday = date == today
@@ -165,7 +172,7 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
                                     ),
                                 contentAlignment = Alignment.Center
                             ) {
-                                val label = if (date.dayOfMonth == 1 || date == dateList.first()) {
+                                val label = if (date.dayOfMonth == 1) {
                                     date.format(DateTimeFormatter.ofPattern("MMM"))
                                 } else {
                                     date.dayOfMonth.toString()
@@ -173,8 +180,8 @@ fun StatsScreen(viewModel: SalahViewModel = viewModel()) {
                                 Text(
                                     text = label,
                                     style = MaterialTheme.typography.labelSmall.copy(
-                                        fontWeight = if (isToday || date.dayOfMonth == 1 || date == dateList.first()) FontWeight.ExtraBold else FontWeight.Medium,
-                                        color = if (isToday || date.dayOfMonth == 1 || date == dateList.first()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                                        fontWeight = if (isToday || date.dayOfMonth == 1) FontWeight.ExtraBold else FontWeight.Medium,
+                                        color = if (isToday || date.dayOfMonth == 1) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 )
                             }
