@@ -1,4 +1,4 @@
-package com.hussain.namaztracker.ui.screens
+ package com.hussain.namaztracker.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -37,12 +37,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,12 +63,44 @@ import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.*
 
-val ParallelogramShape = GenericShape { size, _ ->
-    moveTo(size.width * 0.25f, 0f)
-    lineTo(size.width, 0f)
-    lineTo(size.width, size.height)
-    lineTo(0f, size.height)
-    close()
+class RoundedSlantedShape(
+    private val cornerRadius: Float,
+    private val slantWidth: Float
+) : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        val path = Path().apply {
+            // Start at top slant point
+            moveTo(slantWidth, 0f)
+            // Line to top right (before corner)
+            lineTo(size.width - cornerRadius, 0f)
+            // Top right corner
+            arcTo(
+                rect = Rect(size.width - 2 * cornerRadius, 0f, size.width, 2 * cornerRadius),
+                startAngleDegrees = -90f,
+                sweepAngleDegrees = 90f,
+                forceMoveTo = false
+            )
+            // Line to bottom right (before corner)
+            lineTo(size.width, size.height - cornerRadius)
+            // Bottom right corner
+            arcTo(
+                rect = Rect(size.width - 2 * cornerRadius, size.height - 2 * cornerRadius, size.width, size.height),
+                startAngleDegrees = 0f,
+                sweepAngleDegrees = 90f,
+                forceMoveTo = false
+            )
+            // Line to bottom left (0, height)
+            lineTo(0f, size.height)
+            // Slant line back to top slant point
+            lineTo(slantWidth, 0f)
+            close()
+        }
+        return Outline.Generic(path)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -424,15 +464,32 @@ fun PrayerCard(
                 MaterialTheme.colorScheme.surfaceVariant 
                 else prayer.status.color
 
+            // Corner radius matches the card (24dp)
+            val density = androidx.compose.ui.platform.LocalDensity.current
+            val radiusPx = with(density) { 24.dp.toPx() }
+            val slantWidthPx = with(density) { 25.dp.toPx() }
+            val roundedSlantedShape = remember(radiusPx, slantWidthPx) { 
+                RoundedSlantedShape(radiusPx, slantWidthPx) 
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(100.dp)
-                    .clip(ParallelogramShape)
+                    .clip(roundedSlantedShape)
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(statusColor, statusColor.copy(alpha = 0.8f))
                         )
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = when (prayer.status) {
+                            PrayerStatus.UPCOMING -> Color.Transparent
+                            PrayerStatus.MISSED -> Color.Black.copy(alpha = 0.2f)
+                            else -> Color.White.copy(alpha = 0.2f)
+                        },
+                        shape = roundedSlantedShape
                     ),
                 contentAlignment = Alignment.Center
             ) {
@@ -440,8 +497,10 @@ fun PrayerCard(
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(40.dp)
+                        tint = if (prayer.status == PrayerStatus.UPCOMING) 
+                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                            else Color.White,
+                        modifier = Modifier.size(36.dp)
                     )
                 }
             }
