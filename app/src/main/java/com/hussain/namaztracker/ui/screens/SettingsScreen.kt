@@ -15,9 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,7 +35,6 @@ import java.util.Locale
 @Composable
 fun SettingsScreen() {
     val context = LocalContext.current
-    val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
     val settingsManager = remember { SettingsManager(context) }
     val alarmScheduler = remember { AlarmScheduler(context) }
@@ -159,7 +156,6 @@ fun SettingsScreen() {
                             iconColor = Color(0xFFFF9800),
                             checked = isReminderEnabled,
                             onCheckedChange = { enabled ->
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                 if (enabled) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)

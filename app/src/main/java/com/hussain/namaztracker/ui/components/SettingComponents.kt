@@ -15,7 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -72,6 +74,7 @@ fun ThemeCard(
     selectedTheme: ThemeMode,
     onThemeChange: (ThemeMode) -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
     Surface(
         modifier       = Modifier.fillMaxWidth(),
         shape          = RoundedCornerShape(24.dp),
@@ -120,7 +123,12 @@ fun ThemeCard(
                     ToggleButton(
                         modifier        = Modifier.weight(1f).height(44.dp),
                         checked         = isSelected,
-                        onCheckedChange = { if (it) onThemeChange(option) },
+                        onCheckedChange = { 
+                            if (it) {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                onThemeChange(option)
+                            }
+                        },
                         shapes          = shapes,
                         colors          = ToggleButtonDefaults.toggleButtonColors(
                             checkedContainerColor = MaterialTheme.colorScheme.primary,
@@ -169,6 +177,7 @@ fun SettingTile(
     onCheckedChange: (Boolean) -> Unit,
     shape: RoundedCornerShape
 ) {
+    val haptic = LocalHapticFeedback.current
     Surface(
         modifier       = Modifier.fillMaxWidth(),
         shape          = shape,
@@ -179,7 +188,10 @@ fun SettingTile(
             verticalAlignment = Alignment.CenterVertically,
             modifier          = Modifier
                 .fillMaxWidth()
-                .clickable { onCheckedChange(!checked) }
+                .clickable { 
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    onCheckedChange(!checked) 
+                }
                 .padding(16.dp)
         ) {
             Surface(
@@ -207,7 +219,10 @@ fun SettingTile(
             Spacer(Modifier.width(8.dp))
             Switch(
                 checked       = checked,
-                onCheckedChange = { onCheckedChange(it) },
+                onCheckedChange = { 
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    onCheckedChange(it) 
+                },
                 thumbContent  = {
                     Icon(
                         imageVector = if (checked) Icons.Filled.Check else Icons.Filled.Clear,
