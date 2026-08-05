@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -28,6 +29,7 @@ import com.hussain.namaztracker.ui.components.*
 import com.hussain.namaztracker.ui.theme.NamazTrackerTheme
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -178,9 +180,35 @@ fun SettingsScreen() {
                         )
                         
                         if (isReminderEnabled) {
+                            val formattedTime = remember(reminderHour, reminderMinute) {
+                                val time = LocalTime.of(reminderHour, reminderMinute)
+                                time.format(DateTimeFormatter.ofPattern("hh:mm a", Locale.getDefault()))
+                            }
                             ClickableTile(
                                 title = "Reminder Time",
-                                subtitle = String.format(Locale.getDefault(), "%02d:%02d", reminderHour, reminderMinute),
+                                subtitleContent = {
+                                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                        Text(
+                                            text = "Set your preferred notification time",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Surface(
+                                            shape = CircleShape,
+                                            color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                                            modifier = Modifier.offset(x = (-6).dp)
+                                        ) {
+                                            Text(
+                                                text = formattedTime,
+                                                style = MaterialTheme.typography.labelMedium.copy(
+                                                    fontWeight = FontWeight.Bold
+                                                ),
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                                            )
+                                        }
+                                    }
+                                },
                                 icon = Icons.Default.Schedule,
                                 iconColor = Color(0xFF9C27B0),
                                 onClick = { showTimePicker = true },

@@ -227,7 +227,9 @@ fun ClickableTile(
     iconColor: Color = MaterialTheme.colorScheme.primary,
     painterContainerColor: Color = Color.Transparent,
     title: String,
-    subtitle: String,
+    subtitle: String = "",
+    subtitleContent: (@Composable () -> Unit)? = null,
+    trailingContent: (@Composable () -> Unit)? = null,
     onClick: () -> Unit,
     shape: RoundedCornerShape
 ) {
@@ -273,10 +275,24 @@ fun ClickableTile(
             Column(Modifier.weight(1f)) {
                 Text(title, style = MaterialTheme.typography.titleMedium,
                     overflow = TextOverflow.Ellipsis, maxLines = 1)
-                Text(subtitle, style = MaterialTheme.typography.bodySmall,
-                    color    = MaterialTheme.colorScheme.onSurfaceVariant,
-                    overflow = TextOverflow.Ellipsis, maxLines = 2)
+                
+                if (subtitleContent != null) {
+                    Box {
+                        subtitleContent()
+                    }
+                } else if (subtitle.isNotEmpty()) {
+                    Text(subtitle, style = MaterialTheme.typography.bodySmall,
+                        color    = MaterialTheme.colorScheme.onSurfaceVariant,
+                        overflow = TextOverflow.Ellipsis, maxLines = 2)
+                }
             }
+
+            if (trailingContent != null) {
+                Box(modifier = Modifier.padding(horizontal = 8.dp)) {
+                    trailingContent()
+                }
+            }
+
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
